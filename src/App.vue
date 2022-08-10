@@ -1,46 +1,33 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Calculadora"/>
-    
-    <label for="">numero1</label>
-     <input v-model="numero1" placeholder=" ingrese numero1"><br><br>
-     
-     <label for="">numero2</label>
-     <input v-model="numero2" placeholder=" ingrese numero2"><br><br>
    
+   
+<div class="cal">
+   <img alt="Vue logo" src="./assets/calc.jpg">
+    <HelloWorld msg="Calculadora"/><br>
+    <label for="app">numero 1</label>
+     <input type="Number" v-model="numero1" placeholder=" ingrese numero1"   ><br><br>
+     
+     <label for="">numero 2</label>
+     <input type="Number"  v-model="numero2" placeholder=" ingrese numero2"><br><br>
+   <label for=""> Operacion:</label>
      <select v-model="selected" > 
-  
+  <option :value="{}" disabled hidden> Seleccione</option>
  <option v-for="option in options" :value="option" :key="option.id" >
     {{ option.name }}
   </option>
 </select>
-     <button @click="calcular()" > Calcular </button>
+     <button @click="validar()" > Calcular </button>
 
-     <h2>{{resultado}}</h2>
+     <h2>resultado: {{+""+resultado}}</h2>
 
-    <table>
-      <thead>
-        <tr>
-          <th> id</th>
-          <th> numero1</th>
-          <th> numero2</th>
-          <th> resultado</th>
-        </tr>
 
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{}}</td>
-          <td>{{numero1}}</td>
-          <td>{{numero2}}</td>
-          <td>{{resultado}}</td>
+    </div>
 
-        </tr> 
-      </tbody> 
-
-    </table>
-    
+    <div class="container">
+        <ComponentTabla :array="array"  />
+    </div>
+   
 
   </div>
 </template>
@@ -48,34 +35,38 @@
 <script>
 
 import HelloWorld from './components/HelloWorld.vue'
+import ComponentTabla from './components/ComponentTabla.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  },
-
+    HelloWorld,
+    ComponentTabla
+},
   data:()=>({
   
-    numero1: '',
-    numero2: '',
+    numero1:'',
+    numero2:'',
     resultado:0,
     options: [
        { id: 1, name: 'suma' },
         { id: 2, name: 'resta' },
          { id: 3, name: 'multiplicacion' },
           { id: 4, name: 'division' },
+         
       
     ], 
-    array:[]
+    selected:{},
+    array:[],
+    
    
     
    
   }),
   methods:{
     calcular(){
-      
-     if(this.selected.id===1){
+     
+      if(this.selected.id===1){
        this.resultado= Number(this.numero1)+ Number(this.numero2)
       }else 
         if(this.selected.id===2){
@@ -85,20 +76,31 @@ export default {
            this.resultado= Number(this.numero1)* Number(this.numero2)
         }
         else{
-           this.resultado= Number(this.numero1)/ Number(this.numero2) }
+           this.resultado= Number(this.numero1)/ Number(this.numero2) 
+           }
+
+           this.llenarTabla()
         },
 
-       
-      
+      llenarTabla(){
+        this.array.push({op:this.selected.name,n1:this.numero1,n2:this.numero2,rs:this.resultado})
 
-        
-  }, 
-  computed:{
-   
-    },
-    mounted:{
+      },
+     validar(){
       
-    }
+      
+        if(this.numero1 ==='' || this.numero2 ===''){
+           alert("datos requeridos")  
+      } else 
+           this.calcular();
+            
+      
+     
+
+     }
+
+  }
+    
  }  
 
   
@@ -112,61 +114,44 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 30px;
 }
 
-table {
+input,select{
+  margin:  3px;
   border: 2px solid #42b983;
   border-radius: 3px;
   background-color: #fff;
+  padding: 5px;
+  text-size-adjust: 5px;
+}
+label{
+  border-radius: 2px;
+  text-decoration-color: black;
+  text-anchor: middle;
+  margin:  5px;
+  padding: 5px;
+}
+
+button{
+   border: 2px solid #42b983;
+  border-radius: 3px;
+  background-color: #fff;
   text-align: center;
+  font-size: medium;
+  text-decoration-color: #42b983;
+  padding: 10px;
+}
+img{
+  height: 200px;
+  width: 320px;
+
 }
 
-th {
-  background-color: #42b983;
-  color: rgba(255,255,255,0.66);
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-td {
-  background-color: #f9f9f9;
-}
-
-th, td {
-  min-width: 120px;
-  padding: 10px 20px;
-}
-th.active {
-  color: #fff;
-}
-
-th.active .arrow {
-  opacity: 1;
-}
-
-.arrow {
-  display: inline-block;
-  vertical-align: middle;
-  width: 0;
-  height: 0;
-  margin-left: 5px;
-  opacity: 0.66;
-}
-
-.arrow.asc {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 4px solid #fff;
-}
-
-.arrow.dsc {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid #fff;
+.container{
+  
+  margin-top: 5px;
+  justify-content: center;
 }
 
 </style>
